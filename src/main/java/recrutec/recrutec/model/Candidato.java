@@ -10,4 +10,6 @@ import lombok.Setter;
 public class Candidato extends User {
     private String curriculo;
     private String areaInteresse;
+    private String habilidades;
+    private String certificados;
 }
