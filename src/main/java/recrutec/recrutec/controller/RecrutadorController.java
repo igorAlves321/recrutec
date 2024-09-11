@@ -41,6 +41,22 @@ public class RecrutadorController {
         return new ResponseEntity<>(novoRecrutador, HttpStatus.CREATED);
     }
 
+    // Endpoint para atualizar um recrutador existente (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Recrutador> atualizarRecrutador(@PathVariable Long id, @RequestBody Recrutador recrutadorAtualizado) {
+        Optional<Recrutador> recrutadorOptional = recrutadorService.buscarRecrutadorPorId(id);
+        if (recrutadorOptional.isPresent()) {
+            Recrutador recrutadorExistente = recrutadorOptional.get();
+            recrutadorExistente.setNome(recrutadorAtualizado.getNome());
+            recrutadorExistente.setEmail(recrutadorAtualizado.getEmail());
+            recrutadorExistente.setEmpresa(recrutadorAtualizado.getEmpresa());
+            // Atualizar outros campos conforme necessário
+            Recrutador recrutadorAtualizadoSalvo = recrutadorService.salvarRecrutador(recrutadorExistente);
+            return new ResponseEntity<>(recrutadorAtualizadoSalvo, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     // Endpoint para deletar um recrutador
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarRecrutador(@PathVariable Long id) {

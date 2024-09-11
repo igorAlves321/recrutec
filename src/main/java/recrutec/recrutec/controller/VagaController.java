@@ -53,6 +53,23 @@ public class VagaController {
         }
     }
 
+    // Endpoint para atualizar uma vaga existente (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Vaga> atualizarVaga(@PathVariable Long id, @RequestBody Vaga vagaAtualizada, @RequestParam Long recrutadorId) {
+        Optional<Vaga> vagaOptional = vagaService.buscarVagaPorId(id);
+        Optional<Recrutador> recrutadorOptional = recrutadorService.buscarRecrutadorPorId(recrutadorId);
+        
+        if (vagaOptional.isPresent() && recrutadorOptional.isPresent()) {
+            Vaga vagaExistente = vagaOptional.get();
+            vagaExistente.setTitulo(vagaAtualizada.getTitulo());
+            vagaExistente.setDescricao(vagaAtualizada.getDescricao());
+            vagaExistente.setRecrutador(recrutadorOptional.get());  // Atualiza o recrutador associado, se necessário
+            Vaga vagaAtualizadaSalva = vagaService.salvarVaga(vagaExistente);
+            return new ResponseEntity<>(vagaAtualizadaSalva, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     // Endpoint para deletar uma vaga por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarVaga(@PathVariable Long id) {

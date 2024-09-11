@@ -41,6 +41,23 @@ public class CandidatoController {
         return new ResponseEntity<>(novoCandidato, HttpStatus.CREATED);
     }
 
+    // Endpoint para atualizar um candidato existente (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Candidato> atualizarCandidato(@PathVariable Long id, @RequestBody Candidato candidatoAtualizado) {
+        Optional<Candidato> candidatoOptional = candidatoService.buscarCandidatoPorId(id);
+        if (candidatoOptional.isPresent()) {
+            Candidato candidatoExistente = candidatoOptional.get();
+            candidatoExistente.setNome(candidatoAtualizado.getNome());
+            candidatoExistente.setEmail(candidatoAtualizado.getEmail());
+            candidatoExistente.setCurriculo(candidatoAtualizado.getCurriculo());
+            candidatoExistente.setAreaInteresse(candidatoAtualizado.getAreaInteresse());
+            // Atualizar outros campos conforme necessário
+            Candidato candidatoAtualizadoSalvo = candidatoService.salvarCandidato(candidatoExistente);
+            return new ResponseEntity<>(candidatoAtualizadoSalvo, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     // Endpoint para deletar um candidato
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCandidato(@PathVariable Long id) {
