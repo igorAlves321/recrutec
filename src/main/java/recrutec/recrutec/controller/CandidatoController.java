@@ -1,4 +1,4 @@
-package recrutec.recrutec.controler;
+package recrutec.recrutec.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
