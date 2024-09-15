@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuários</title>
+    <style>
+        /* Adicione aqui seus estilos personalizados */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select, button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .form-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cadastro de Usuário</h1>
+
+    <form id="cadastroForm">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone" required>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+
+        <label for="role">Papel:</label>
+        <select id="role" name="role" required>
+            <option value="">Selecione o papel</option>
+            <option value="CANDIDATO">Candidato</option>
+            <option value="RECRUTADOR">Recrutador</option>
+        </select>
+
+        <!-- Campos para Candidato -->
+        <div id="candidatoFields" class="form-section">
+            <label for="curriculo">Currículo (link):</label>
+            <input type="text" id="curriculo" name="curriculo">
+
+            <label for="areaInteresse">Área de Interesse:</label>
+            <input type="text" id="areaInteresse" name="areaInteresse" placeholder="Exemplo: Desenvolvimento Backend, Segurança">
+
+            <label for="pcd">Descrição da Deficiência (PCD):</label>
+            <input type="text" id="pcd" name="pcd">
+        </div>
+
+        <!-- Campos para Recrutador -->
+        <div id="recrutadorFields" class="form-section">
+            <label for="empresa">Empresa:</label>
+            <input type="text" id="empresa" name="empresa">
+        </div>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <script>
+        // Função para exibir campos específicos dependendo do papel selecionado
+        document.getElementById('role').addEventListener('change', function () {
+            const role = this.value;
+            const candidatoFields = document.getElementById('candidatoFields');
+            const recrutadorFields = document.getElementById('recrutadorFields');
+
+            // Mostra ou oculta campos baseados no papel selecionado
+            if (role === 'CANDIDATO') {
+                candidatoFields.style.display = 'block';
+                recrutadorFields.style.display = 'none';
+            } else if (role === 'RECRUTADOR') {
+                recrutadorFields.style.display = 'block';
+                candidatoFields.style.display = 'none';
+            } else {
+                // Esconde ambos se não for Candidato nem Recrutador
+                candidatoFields.style.display = 'none';
+                recrutadorFields.style.display = 'none';
+            }
+        });
+
+        // Função para cadastrar usuário (Candidato ou Recrutador)
+        document.getElementById('cadastroForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Impede o comportamento padrão do formulário
+
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
+            const senha = document.getElementById('senha').value;
+            const role = document.getElementById('role').value;
+
+            let data = { nome, email, telefone, senha, role };
+            let endpoint = '';
+
+            // Se o papel for Candidato, adiciona campos específicos de Candidato
+            if (role === 'CANDIDATO') {
+                const curriculo = document.getElementById('curriculo').value;
+                const areaInteresse = document.getElementById('areaInteresse').value.split(',');
+                const pcd = document.getElementById('pcd').value;
+                data = { ...data, curriculo, areaInteresse, pcd };
+                endpoint = '/candidatos';
+            }
+
+            // Se o papel for Recrutador, adiciona campos específicos de Recrutador
+            if (role === 'RECRUTADOR') {
+                const empresa = document.getElementById('empresa').value;
+                data = { ...data, empresa };
+                endpoint = '/recrutadores';
+            }
+
+            // Envia os dados para o endpoint correto com base no papel
+            fetch(`http://localhost:8080${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Usuário cadastrado com sucesso!');
+                    window.location.href = '/login.html'; // Redireciona após cadastro
+                } else {
+                    alert('Erro ao cadastrar usuário');
+                }
+            })
+            .catch(error => {
+                console.error('Erro no cadastro:', error);
+                alert('Erro no cadastro');
+            });
+        });
+    </script>
+
+</body>
+</html>

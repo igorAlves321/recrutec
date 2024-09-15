@@ -35,4 +35,5 @@ public class Candidato extends User {
         inverseJoinColumns = @JoinColumn(name = "vaga_id")
     )
     private Set<Vaga> vagasInscritas;
+    private String pcd;
 }
