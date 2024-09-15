@@ -5,8 +5,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,5 +28,8 @@ public class Vaga {
     @ManyToOne
     private Recrutador recrutador;
 
-    private String dataPostagem;
+    @ManyToMany(mappedBy = "vagasInscritas")
+    private Set<Candidato> candidatos;
+
+    private LocalDate dataPostagem;
 }
