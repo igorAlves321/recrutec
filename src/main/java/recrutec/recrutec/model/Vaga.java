@@ -6,10 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 @Getter
@@ -32,4 +34,15 @@ public class Vaga {
     private Set<Candidato> candidatos;
 
     private LocalDate dataPostagem;
+
+    // Define a data de postagem como a data atual antes de persistir a entidade
+    @PrePersist
+    public void prePersist() {
+        this.dataPostagem = LocalDate.now();
+    }
+
+    // Método para calcular os dias desde a postagem
+    public long getDiasDesdePostagem() {
+        return ChronoUnit.DAYS.between(this.dataPostagem, LocalDate.now());
+    }
 }

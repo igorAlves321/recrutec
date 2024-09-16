@@ -26,6 +26,7 @@ public class VagaController {
     @GetMapping
     public ResponseEntity<List<Vaga>> listarVagas() {
         List<Vaga> vagas = vagaService.listarVagas();
+        // Você pode adicionar a lógica para exibir a quantidade de dias desde a postagem no frontend
         return new ResponseEntity<>(vagas, HttpStatus.OK);
     }
 
@@ -64,6 +65,8 @@ public class VagaController {
             vagaExistente.setTitulo(vagaAtualizada.getTitulo());
             vagaExistente.setDescricao(vagaAtualizada.getDescricao());
             vagaExistente.setRecrutador(recrutadorOptional.get());  // Atualiza o recrutador associado, se necessário
+            // Mantém a data de postagem e status inalterados
+            vagaExistente.setStatus(vagaAtualizada.getStatus());  // Permite atualizar o status se necessário
             Vaga vagaAtualizadaSalva = vagaService.salvarVaga(vagaExistente);
             return new ResponseEntity<>(vagaAtualizadaSalva, HttpStatus.OK);
         }

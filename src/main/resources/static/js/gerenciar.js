@@ -19,11 +19,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('editForm').addEventListener('submit', function (event) {
         event.preventDefault();
         const id = document.getElementById('editId').value;
-        const nome = document.getElementById('editNome').value;
+        const nome = document.getElementById('editNome') ? document.getElementById('editNome').value : null;
         const email = document.getElementById('editEmail') ? document.getElementById('editEmail').value : null;
         const empresa = document.getElementById('editEmpresa') ? document.getElementById('editEmpresa').value : null;
         const titulo = document.getElementById('editTitulo') ? document.getElementById('editTitulo').value : null;
         const descricao = document.getElementById('editDescricao') ? document.getElementById('editDescricao').value : null;
+        const status = document.getElementById('editStatus') ? document.getElementById('editStatus').value : null;
         const recrutadorId = document.getElementById('editRecrutadorId') ? document.getElementById('editRecrutadorId').value : null;
         const tipo = document.getElementById('editForm').getAttribute('data-tipo');
 
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (tipo === 'recrutador') {
             data = { nome, email, empresa };
         } else if (tipo === 'vaga') {
-            data = { titulo, descricao, recrutadorId };
+            data = { titulo, descricao, status, recrutadorId };
         }
 
         atualizarEntidade(id, data, tipo, recrutadorId).then(() => {
@@ -98,11 +99,11 @@ function carregarVagas() {
     fetch('/vagas')
         .then(response => response.json())
         .then(data => {
-            let html = '<h2>Vagas</h2><table class="table table-striped"><thead><tr><th>Título</th><th>Descrição</th><th>Ações</th></tr></thead><tbody>';
+            let html = '<h2>Vagas</h2><table class="table table-striped"><thead><tr><th>Título</th><th>Descrição</th><th>Status</th><th>Data de Postagem</th><th>Ações</th></tr></thead><tbody>';
             data.forEach(vaga => {
-                html += `<tr><td>${vaga.titulo}</td><td>${vaga.descricao}</td>
+                html += `<tr><td>${vaga.titulo}</td><td>${vaga.descricao}</td><td>${vaga.status}</td><td>${vaga.dataPostagem}</td>
                          <td>
-                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${vaga.id}, '${vaga.titulo}', '${vaga.descricao}', 'vaga')">Editar</button>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${vaga.id}, '${vaga.titulo}', '${vaga.descricao}', '${vaga.status}', '${vaga.dataPostagem}', 'vaga')">Editar</button>
                             <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${vaga.id}, 'vaga')">Excluir</button>
                          </td></tr>`;
             });
@@ -112,20 +113,15 @@ function carregarVagas() {
 }
 
 // Função para abrir o modal de edição
-function abrirModalEditar(id, nome, email = '', empresa = '', tipo) {
+function abrirModalEditar(id, titulo = '', descricao = '', status = '', dataPostagem = '', tipo) {
     document.getElementById('editId').value = id;
-    document.getElementById('editNome').value = nome;
-    document.getElementById('editEmail').value = email;
-
-    const empresaField = document.getElementById('editEmpresa');
-    if (empresaField) {
-        if (tipo === 'recrutador') {
-            empresaField.parentElement.style.display = 'block';
-            empresaField.value = empresa;
-        } else {
-            empresaField.parentElement.style.display = 'none';
-        }
-    }
+    document.getElementById('editTitulo').value = titulo;
+    document.getElementById('editDescricao').value = descricao;
+    document.getElementById('editStatus').value = status;
+    
+    // Exibe a data de postagem, mas não permite edição
+    document.getElementById('editDataPostagem').value = dataPostagem;
+    document.getElementById('editDataPostagem').setAttribute('disabled', 'disabled');
 
     document.getElementById('editForm').setAttribute('data-tipo', tipo);
     const modal = new bootstrap.Modal(document.getElementById('editModal'));
