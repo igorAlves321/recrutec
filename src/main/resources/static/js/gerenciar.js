@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Adicionar eventos para os menus
+    // Seleção dos menus e navegação entre seções
     document.getElementById('menuCandidatos').addEventListener('click', function (event) {
         event.preventDefault();
-        carregarEntidades('candidato');
+        carregarCandidatos();
     });
 
     document.getElementById('menuRecrutadores').addEventListener('click', function (event) {
         event.preventDefault();
-        carregarEntidades('recrutador');
+        carregarRecrutadores();
     });
 
     document.getElementById('menuVagas').addEventListener('click', function (event) {
         event.preventDefault();
-        carregarEntidades('vaga');
+        carregarVagas();
     });
 
     // Submissão do formulário de edição
@@ -20,20 +20,35 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const id = document.getElementById('editId').value;
         const nome = document.getElementById('editNome').value;
-        const email = document.getElementById('editEmail').value;
+        const email = document.getElementById('editEmail') ? document.getElementById('editEmail').value : null;
+        const empresa = document.getElementById('editEmpresa') ? document.getElementById('editEmpresa').value : null;
+        const titulo = document.getElementById('editTitulo') ? document.getElementById('editTitulo').value : null;
+        const descricao = document.getElementById('editDescricao') ? document.getElementById('editDescricao').value : null;
+        const recrutadorId = document.getElementById('editRecrutadorId') ? document.getElementById('editRecrutadorId').value : null;
         const tipo = document.getElementById('editForm').getAttribute('data-tipo');
-        const empresa = document.getElementById('editEmpresa')?.value || null;
 
-        let data = { nome, email };
-        if (tipo === 'recrutador') {
-            data.empresa = empresa;
+        let data;
+
+        // Construção dos dados baseados no tipo de entidade
+        if (tipo === 'candidato') {
+            data = { nome, email };
+        } else if (tipo === 'recrutador') {
+            data = { nome, email, empresa };
+        } else if (tipo === 'vaga') {
+            data = { titulo, descricao, recrutadorId };
         }
 
-        atualizarEntidade(id, data, tipo).then(() => {
+        atualizarEntidade(id, data, tipo, recrutadorId).then(() => {
             alert(`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} atualizado com sucesso!`);
             const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
             modal.hide();
-            carregarEntidades(tipo);
+            if (tipo === 'candidato') {
+                carregarCandidatos();
+            } else if (tipo === 'recrutador') {
+                carregarRecrutadores();
+            } else if (tipo === 'vaga') {
+                carregarVagas();
+            }
         }).catch(error => {
             console.error('Erro ao atualizar:', error);
             alert('Erro ao atualizar os dados.');
@@ -41,53 +56,63 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Função genérica para carregar entidades (candidatos, recrutadores, vagas)
-function carregarEntidades(tipo) {
-    const endpoint = {
-        candidato: '/candidatos',
-        recrutador: '/recrutadores',
-        vaga: '/vagas'
-    }[tipo];
-
-    document.getElementById('content').innerHTML = `<h2>Carregando ${tipo}s...</h2>`;
-    
-    fetch(endpoint)
+// Funções para carregar dados e manipular entidades
+function carregarCandidatos() {
+    document.getElementById('content').innerHTML = '<h2>Carregando Candidatos...</h2>';
+    fetch('/candidatos')
         .then(response => response.json())
         .then(data => {
-            let html = `<h2>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}s</h2><table class="table table-striped"><thead><tr>`;
-            if (tipo === 'vaga') {
-                html += '<th>Título</th><th>Descrição</th>';
-            } else {
-                html += '<th>Nome</th><th>Email</th>';
-                if (tipo === 'recrutador') {
-                    html += '<th>Empresa</th>';
-                }
-            }
-            html += '<th>Ações</th></tr></thead><tbody>';
-
-            data.forEach(entidade => {
-                html += `<tr>`;
-                if (tipo === 'vaga') {
-                    html += `<td>${entidade.titulo}</td><td>${entidade.descricao}</td>`;
-                } else {
-                    html += `<td>${entidade.nome}</td><td>${entidade.email}</td>`;
-                    if (tipo === 'recrutador') {
-                        html += `<td>${entidade.empresa}</td>`;
-                    }
-                }
-                html += `<td>
-                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${entidade.id}, '${entidade.nome}', '${entidade.email}', '${entidade.empresa || ''}', '${tipo}')">Editar</button>
-                            <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${entidade.id}, '${tipo}')">Excluir</button>
+            let html = '<h2>Candidatos</h2><table class="table table-striped"><thead><tr><th>Nome</th><th>Email</th><th>Ações</th></tr></thead><tbody>';
+            data.forEach(candidato => {
+                html += `<tr><td>${candidato.nome}</td><td>${candidato.email}</td>
+                         <td>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${candidato.id}, '${candidato.nome}', '${candidato.email}', '', 'candidato')">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${candidato.id}, 'candidato')">Excluir</button>
                          </td></tr>`;
             });
+            html += '</tbody></table>';
+            document.getElementById('content').innerHTML = html;
+        });
+}
 
+function carregarRecrutadores() {
+    document.getElementById('content').innerHTML = '<h2>Carregando Recrutadores...</h2>';
+    fetch('/recrutadores')
+        .then(response => response.json())
+        .then(data => {
+            let html = '<h2>Recrutadores</h2><table class="table table-striped"><thead><tr><th>Nome</th><th>Email</th><th>Empresa</th><th>Ações</th></tr></thead><tbody>';
+            data.forEach(recrutador => {
+                html += `<tr><td>${recrutador.nome}</td><td>${recrutador.email}</td><td>${recrutador.empresa}</td>
+                         <td>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${recrutador.id}, '${recrutador.nome}', '${recrutador.email}', '${recrutador.empresa}', 'recrutador')">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${recrutador.id}, 'recrutador')">Excluir</button>
+                         </td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('content').innerHTML = html;
+        });
+}
+
+function carregarVagas() {
+    document.getElementById('content').innerHTML = '<h2>Carregando Vagas...</h2>';
+    fetch('/vagas')
+        .then(response => response.json())
+        .then(data => {
+            let html = '<h2>Vagas</h2><table class="table table-striped"><thead><tr><th>Título</th><th>Descrição</th><th>Ações</th></tr></thead><tbody>';
+            data.forEach(vaga => {
+                html += `<tr><td>${vaga.titulo}</td><td>${vaga.descricao}</td>
+                         <td>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${vaga.id}, '${vaga.titulo}', '${vaga.descricao}', 'vaga')">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${vaga.id}, 'vaga')">Excluir</button>
+                         </td></tr>`;
+            });
             html += '</tbody></table>';
             document.getElementById('content').innerHTML = html;
         });
 }
 
 // Função para abrir o modal de edição
-function abrirModalEditar(id, nome, email, empresa = '', tipo) {
+function abrirModalEditar(id, nome, email = '', empresa = '', tipo) {
     document.getElementById('editId').value = id;
     document.getElementById('editNome').value = nome;
     document.getElementById('editEmail').value = email;
@@ -107,7 +132,7 @@ function abrirModalEditar(id, nome, email, empresa = '', tipo) {
     modal.show();
 }
 
-// Função genérica para excluir entidades
+// Funções de exclusão para candidatos, recrutadores e vagas
 function excluirEntidade(id, tipo) {
     const endpoint = {
         candidato: `/candidatos/${id}`,
@@ -116,32 +141,43 @@ function excluirEntidade(id, tipo) {
     }[tipo];
 
     if (confirm(`Tem certeza que deseja excluir este ${tipo}?`)) {
-        fetch(endpoint, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    carregarEntidades(tipo);
-                } else {
-                    alert(`Erro ao excluir ${tipo}.`);
+        fetch(endpoint, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                if (tipo === 'candidato') {
+                    carregarCandidatos();
+                } else if (tipo === 'recrutador') {
+                    carregarRecrutadores();
+                } else if (tipo === 'vaga') {
+                    carregarVagas();
                 }
-            })
-            .catch(error => {
-                console.error(`Erro ao excluir ${tipo}:`, error);
+            } else {
                 alert(`Erro ao excluir ${tipo}.`);
-            });
+            }
+        })
+        .catch(error => {
+            console.error(`Erro ao excluir ${tipo}:`, error);
+            alert(`Erro ao excluir ${tipo}.`);
+        });
     }
 }
 
-// Função genérica para atualizar uma entidade
-async function atualizarEntidade(id, data, tipo) {
-    const endpoint = {
-        candidato: `http://localhost:8080/candidatos/${id}`,
-        recrutador: `http://localhost:8080/recrutadores/${id}`,
-        vaga: `http://localhost:8080/vagas/${id}`
-    }[tipo];
+// Função para atualizar uma entidade (candidato, recrutador ou vaga)
+async function atualizarEntidade(id, data, tipo, recrutadorId = null) {
+    let pluralTipo = tipo === 'recrutador' ? 'recrutadores' : `${tipo}s`; // Corrige pluralização correta para 'recrutador'
+    let endpoint = `http://localhost:8080/${pluralTipo}/${id}`; // Agora usa 'recrutadores' corretamente
+
+    if (tipo === 'vaga' && recrutadorId) {
+        endpoint += `?recrutadorId=${recrutadorId}`;
+    }
 
     const response = await fetch(endpoint, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
     });
 

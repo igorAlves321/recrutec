@@ -50,12 +50,19 @@
                     <form id="editForm">
                         <input type="hidden" id="editId">
                         <div class="mb-3">
-                            <label for="editNome" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="editNome" required>
+                            <label for="editTitulo" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="editTitulo" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="editEmail" required>
+                            <label for="editDescricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="editDescricao" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-control" id="editStatus" required>
+                                <option value="Aberta">Aberta</option>
+                                <option value="Fechada">Fechada</option>
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                     </form>
