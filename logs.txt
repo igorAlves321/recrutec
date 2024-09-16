@@ -1,0 +1,108 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< recrutec:recrutec >--------------------------
+[INFO] Building recrutec 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.3.3:run (default-cli) > test-compile @ recrutec >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ recrutec ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ recrutec ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ recrutec ---
+[INFO] skip non existing resourceDirectory C:\git\recrutec\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ recrutec ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.3.3:run (default-cli) < test-compile @ recrutec <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.3:run (default-cli) @ recrutec ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.3)
+
+2024-09-15T17:05:32.352-03:00  INFO 2112 --- [recrutec] [  restartedMain] recrutec.recrutec.RecrutecApplication    : Starting RecrutecApplication using Java 17.0.9 with PID 2112 (C:\git\recrutec\target\classes started by igor in C:\git\recrutec)
+2024-09-15T17:05:32.357-03:00  INFO 2112 --- [recrutec] [  restartedMain] recrutec.recrutec.RecrutecApplication    : No active profile set, falling back to 1 default profile: "default"
+2024-09-15T17:05:32.458-03:00  INFO 2112 --- [recrutec] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-09-15T17:05:32.458-03:00  INFO 2112 --- [recrutec] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-09-15T17:05:33.653-03:00  INFO 2112 --- [recrutec] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-09-15T17:05:33.791-03:00  INFO 2112 --- [recrutec] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 128 ms. Found 4 JPA repository interfaces.
+2024-09-15T17:05:34.904-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2024-09-15T17:05:34.922-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-09-15T17:05:34.922-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.28]
+2024-09-15T17:05:35.014-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-09-15T17:05:35.015-03:00  INFO 2112 --- [recrutec] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2555 ms
+2024-09-15T17:05:35.372-03:00  INFO 2112 --- [recrutec] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-09-15T17:05:35.589-03:00  INFO 2112 --- [recrutec] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@31a175ee
+2024-09-15T17:05:35.595-03:00  INFO 2112 --- [recrutec] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-09-15T17:05:35.637-03:00  INFO 2112 --- [recrutec] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/recrutec (PostgreSQL 16.1)
+2024-09-15T17:05:35.700-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 0 migrations (execution time 00:00.031s)
+2024-09-15T17:05:35.700-03:00  WARN 2112 --- [recrutec] [  restartedMain] o.f.core.internal.command.DbValidate     : No migrations found. Are your locations set up correctly?
+2024-09-15T17:05:35.787-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2024-09-15T17:05:35.791-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2024-09-15T17:05:35.919-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-09-15T17:05:35.999-03:00  INFO 2112 --- [recrutec] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2024-09-15T17:05:36.050-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-09-15T17:05:36.631-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-09-15T17:05:36.726-03:00  WARN 2112 --- [recrutec] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-09-15T17:05:38.270-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-09-15T17:05:38.563-03:00  INFO 2112 --- [recrutec] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-09-15T17:05:39.100-03:00  WARN 2112 --- [recrutec] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-09-15T17:05:39.140-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-09-15T17:05:39.661-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-09-15T17:05:39.720-03:00  INFO 2112 --- [recrutec] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2024-09-15T17:05:39.733-03:00  INFO 2112 --- [recrutec] [  restartedMain] recrutec.recrutec.RecrutecApplication    : Started RecrutecApplication in 8.082 seconds (process running for 8.902)
+2024-09-15T17:05:58.116-03:00  INFO 2112 --- [recrutec] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-09-15T17:05:58.116-03:00  INFO 2112 --- [recrutec] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-09-15T17:05:58.120-03:00  INFO 2112 --- [recrutec] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0 where r1_0.id=?
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0 where r1_0.id=?
+Hibernate: update recrutador set email=?,empresa=?,nome=?,role=?,senha=?,telefone=? where id=?
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0 where r1_0.id=?
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0 where r1_0.id=?
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0 where r1_0.id=?
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0 where r1_0.id=?
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+Hibernate: select c1_0.id,c1_0.curriculo,c1_0.email,c1_0.nome,c1_0.pcd,c1_0.role,c1_0.senha,c1_0.telefone from candidato c1_0
+Hibernate: select ai1_0.candidato_id,ai1_0.area_interesse from candidato_area_interesse ai1_0 where ai1_0.candidato_id=?
+Hibernate: select h1_0.candidato_id,h1_0.habilidades from candidato_habilidades h1_0 where h1_0.candidato_id=?
+Hibernate: select c1_0.candidato_id,c1_0.certificados from candidato_certificados c1_0 where c1_0.candidato_id=?
+Hibernate: select vi1_0.candidato_id,vi1_1.id,vi1_1.data_postagem,vi1_1.descricao,r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone,vi1_1.status,vi1_1.titulo from candidato_vaga vi1_0 join vaga vi1_1 on vi1_1.id=vi1_0.vaga_id left join recrutador r1_0 on r1_0.id=vi1_1.recrutador_id where vi1_0.candidato_id=?
+Hibernate: select c1_0.id,c1_0.curriculo,c1_0.email,c1_0.nome,c1_0.pcd,c1_0.role,c1_0.senha,c1_0.telefone from candidato c1_0 where c1_0.id=?
+Hibernate: delete from candidato_area_interesse where candidato_id=?
+Hibernate: delete from candidato_certificados where candidato_id=?
+Hibernate: delete from candidato_habilidades where candidato_id=?
+Hibernate: delete from candidato_vaga where candidato_id=?
+Hibernate: delete from candidato where id=?
+Hibernate: select c1_0.id,c1_0.curriculo,c1_0.email,c1_0.nome,c1_0.pcd,c1_0.role,c1_0.senha,c1_0.telefone from candidato c1_0
+Hibernate: select r1_0.id,r1_0.email,r1_0.empresa,r1_0.nome,r1_0.role,r1_0.senha,r1_0.telefone from recrutador r1_0
+2024-09-15T17:23:01.554-03:00  INFO 2112 --- [recrutec] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-09-15T17:23:01.558-03:00  INFO 2112 --- [recrutec] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-09-15T17:23:01.568-03:00  INFO 2112 --- [recrutec] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17:35 min
+[INFO] Finished at: 2024-09-15T17:23:02-03:00
+[INFO] ------------------------------------------------------------------------
+Deseja finalizar o arquivo em lotes (S/N)? 

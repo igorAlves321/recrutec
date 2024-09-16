@@ -1,70 +1,76 @@
-// Função para exibir campos específicos dependendo do papel selecionado
-document.getElementById('role').addEventListener('change', function () {
-    const role = this.value;
-    const candidatoFields = document.getElementById('candidatoFields');
-    const recrutadorFields = document.getElementById('recrutadorFields');
+// Funções para carregar dados do backend
+async function getCandidatos() {
+    const response = await fetch('http://localhost:8080/candidatos');
+    return await response.json();
+}
 
-    // Mostra ou oculta campos baseados no papel selecionado
-    if (role === 'CANDIDATO') {
-        candidatoFields.style.display = 'block';
-        recrutadorFields.style.display = 'none';
-    } else if (role === 'RECRUTADOR') {
-        recrutadorFields.style.display = 'block';
-        candidatoFields.style.display = 'none';
-    } else {
-        // Esconde ambos se não for Candidato nem Recrutador
-        candidatoFields.style.display = 'none';
-        recrutadorFields.style.display = 'none';
+async function getRecrutadores() {
+    const response = await fetch('http://localhost:8080/recrutadores');
+    return await response.json();
+}
+
+async function getVagas() {
+    const response = await fetch('http://localhost:8080/vagas');
+    return await response.json();
+}
+
+// Funções de exclusão
+async function excluirCandidato(id) {
+    const confirmed = confirm('Tem certeza que deseja excluir este candidato?');
+    if (confirmed) {
+        const response = await fetch(`http://localhost:8080/candidatos/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            alert('Candidato excluído com sucesso!');
+            carregarCandidatos(); // Recarregar a lista de candidatos
+        }
     }
-});
+}
 
-// Função para cadastrar usuário (Candidato ou Recrutador)
-document.getElementById('cadastroForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Impede o comportamento padrão do formulário
-
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    const telefone = document.getElementById('telefone').value;
-    const senha = document.getElementById('senha').value;
-    const role = document.getElementById('role').value;
-
-    let data = { nome, email, telefone, senha, role };
-    let endpoint = '';
-
-    // Se o papel for Candidato, adiciona campos específicos de Candidato
-    if (role === 'CANDIDATO') {
-        const curriculo = document.getElementById('curriculo').value;
-        const areaInteresse = document.getElementById('areaInteresse').value.split(',');
-        const pcd = document.getElementById('pcd').value;
-        data = { ...data, curriculo, areaInteresse, pcd };
-        endpoint = '/candidatos';
+async function excluirRecrutador(id) {
+    const confirmed = confirm('Tem certeza que deseja excluir este recrutador?');
+    if (confirmed) {
+        const response = await fetch(`http://localhost:8080/recrutadores/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            alert('Recrutador excluído com sucesso!');
+            carregarRecrutadores(); // Recarregar a lista de recrutadores
+        }
     }
+}
 
-    // Se o papel for Recrutador, adiciona campos específicos de Recrutador
-    if (role === 'RECRUTADOR') {
-        const empresa = document.getElementById('empresa').value;
-        data = { ...data, empresa };
-        endpoint = '/recrutadores';
+async function excluirVaga(id) {
+    const confirmed = confirm('Tem certeza que deseja excluir esta vaga?');
+    if (confirmed) {
+        const response = await fetch(`http://localhost:8080/vagas/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            alert('Vaga excluída com sucesso!');
+            carregarVagas(); // Recarregar a lista de vagas
+        }
     }
+}
 
-    // Envia os dados para o endpoint correto com base no papel
-    fetch(`http://localhost:8080${endpoint}`, {
-        method: 'POST',
+// Função para atualizar dados
+async function atualizarEntidade(id, data, tipo) {
+    const endpoint = {
+        candidato: `http://localhost:8080/candidatos/${id}`,
+        recrutador: `http://localhost:8080/recrutadores/${id}`,
+        vaga: `http://localhost:8080/vagas/${id}`
+    }[tipo];
+
+    const response = await fetch(endpoint, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('Usuário cadastrado com sucesso!');
-            window.location.href = '/login.html'; // Redireciona após cadastro
-        } else {
-            alert('Erro ao cadastrar usuário');
-        }
-    })
-    .catch(error => {
-        console.error('Erro no cadastro:', error);
-        alert('Erro no cadastro');
     });
-});
+
+    if (!response.ok) {
+        throw new Error('Erro ao atualizar os dados');
+    }
+}
