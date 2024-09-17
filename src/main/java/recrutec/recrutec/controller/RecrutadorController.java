@@ -17,6 +17,18 @@ public class RecrutadorController {
     @Autowired
     private RecrutadorService recrutadorService;
 
+    // Simulação para obter o ID do usuário logado
+    private Long getLoggedUserId() {
+        // Simular um usuário logado (ex: o ID do recrutador ou admin)
+        return 1L; // Exemplo: Retorna o ID do usuário logado
+    }
+
+    // Simulação para obter o papel do usuário logado
+    private String getLoggedUserRole() {
+        // Simular um papel de usuário (ADMIN ou RECRUTADOR)
+        return "ADMIN"; // Exemplo: Retorna o papel do usuário logado
+    }
+
     // Endpoint para listar todos os recrutadores
     @GetMapping
     public ResponseEntity<List<Recrutador>> listarRecrutadores() {
@@ -57,14 +69,36 @@ public class RecrutadorController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Endpoint para deletar um recrutador
+    // Endpoint para deletar um recrutador (somente administrador ou o próprio recrutador)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarRecrutador(@PathVariable Long id) {
-        Optional<Recrutador> recrutador = recrutadorService.buscarRecrutadorPorId(id);
-        if (recrutador.isPresent()) {
-            recrutadorService.deletarRecrutador(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Long userId = getLoggedUserId();  // Obtenção simulada do ID do usuário logado
+        String userRole = getLoggedUserRole();  // Obtenção simulada do papel do usuário logado
+
+        System.out.println("Tentativa de exclusão. ID do recrutador: " + id + ", userId: " + userId + ", userRole: " + userRole);
+
+        Optional<Recrutador> recrutadorOptional = recrutadorService.buscarRecrutadorPorId(id);
+
+        if (recrutadorOptional.isPresent()) {
+            Recrutador recrutadorExistente = recrutadorOptional.get();
+
+            if ("ADMIN".equalsIgnoreCase(userRole)) {
+                System.out.println("Usuário ADMIN autorizado a deletar.");
+                recrutadorService.deletarRecrutador(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            if (recrutadorExistente.getId().equals(userId)) {
+                System.out.println("Recrutador original autorizado a deletar.");
+                recrutadorService.deletarRecrutador(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            System.out.println("Usuário não autorizado a deletar o recrutador.");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+
+        System.out.println("Recrutador não encontrado.");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

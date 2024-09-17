@@ -17,6 +17,18 @@ public class CandidatoController {
     @Autowired
     private CandidatoService candidatoService;
 
+    // Simulação para obter o ID do usuário logado
+    private Long getLoggedUserId() {
+        // Simular um usuário logado (ex: o ID do recrutador ou admin)
+        return 1L; // Exemplo: Retorna o ID do usuário logado
+    }
+
+    // Simulação para obter o papel do usuário logado
+    private String getLoggedUserRole() {
+        // Simular um papel de usuário (ADMIN ou RECRUTADOR)
+        return "ADMIN"; // Exemplo: Retorna o papel do usuário logado
+    }
+
     // Endpoint para listar todos os candidatos
     @GetMapping
     public ResponseEntity<List<Candidato>> listarCandidatos() {
@@ -28,10 +40,8 @@ public class CandidatoController {
     @GetMapping("/{id}")
     public ResponseEntity<Candidato> buscarCandidatoPorId(@PathVariable Long id) {
         Optional<Candidato> candidato = candidatoService.buscarCandidatoPorId(id);
-        if (candidato.isPresent()) {
-            return new ResponseEntity<>(candidato.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return candidato.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     // Endpoint para salvar um novo candidato
@@ -41,9 +51,16 @@ public class CandidatoController {
         return new ResponseEntity<>(novoCandidato, HttpStatus.CREATED);
     }
 
-    // Endpoint para atualizar um candidato existente (PUT)
+    // Endpoint para atualizar um candidato existente (somente administrador)
     @PutMapping("/{id}")
     public ResponseEntity<Candidato> atualizarCandidato(@PathVariable Long id, @RequestBody Candidato candidatoAtualizado) {
+        String role = getLoggedUserRole(); // Obtenção simulada do papel do usuário logado
+
+        // Verificação de permissões
+        if (!"ADMIN".equals(role)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // Retorna 403 se não for ADMIN
+        }
+
         Optional<Candidato> candidatoOptional = candidatoService.buscarCandidatoPorId(id);
         if (candidatoOptional.isPresent()) {
             Candidato candidatoExistente = candidatoOptional.get();
@@ -58,9 +75,16 @@ public class CandidatoController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Endpoint para deletar um candidato
+    // Endpoint para deletar um candidato (somente administrador)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCandidato(@PathVariable Long id) {
+        String role = getLoggedUserRole(); // Obtenção simulada do papel do usuário logado
+
+        // Verificação de permissões
+        if (!"ADMIN".equals(role)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // Retorna 403 se não for ADMIN
+        }
+
         Optional<Candidato> candidato = candidatoService.buscarCandidatoPorId(id);
         if (candidato.isPresent()) {
             candidatoService.deletarCandidato(id);

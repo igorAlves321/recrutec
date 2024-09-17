@@ -27,6 +27,18 @@ public class VagaController {
     @Autowired
     private RecrutadorService recrutadorService;
 
+    // Simulação para obter o ID do usuário logado
+    private Long getLoggedUserId() {
+        // Simular um usuário logado (ex: o ID do recrutador ou admin)
+        return 1L; // Exemplo: Retorna o ID do usuário logado
+    }
+
+    // Simulação para obter o papel do usuário logado
+    private String getLoggedUserRole() {
+        // Simular um papel de usuário (ADMIN ou RECRUTADOR)
+        return "ADMIN"; // Exemplo: Retorna o papel do usuário logado
+    }
+
     // Endpoint para listar todas as vagas
     @GetMapping
     public ResponseEntity<List<Vaga>> listarVagas() {
@@ -57,16 +69,21 @@ public class VagaController {
 
     // Endpoint para atualizar uma vaga existente (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<Vaga> atualizarVaga(@PathVariable Long id, @RequestBody Vaga vagaAtualizada, @RequestParam Long recrutadorId) {
+    public ResponseEntity<Vaga> atualizarVaga(@PathVariable Long id, @RequestBody Vaga vagaAtualizada) {
         Optional<Vaga> vagaOptional = vagaService.buscarVagaPorId(id);
-        Optional<Recrutador> recrutadorOptional = recrutadorService.buscarRecrutadorPorId(recrutadorId);
 
-        if (vagaOptional.isPresent() && recrutadorOptional.isPresent()) {
+        if (vagaOptional.isPresent()) {
             Vaga vagaExistente = vagaOptional.get();
+
+            // Mantém o recrutador da vaga existente
+            Recrutador recrutadorExistente = vagaExistente.getRecrutador();
+
+            // Atualiza apenas os campos editáveis
             vagaExistente.setTitulo(vagaAtualizada.getTitulo());
             vagaExistente.setDescricao(vagaAtualizada.getDescricao());
-            vagaExistente.setRecrutador(recrutadorOptional.get());  // Atualiza o recrutador associado, se necessário
-            vagaExistente.setStatus(vagaAtualizada.getStatus());  // Permite atualizar o status
+            vagaExistente.setStatus(vagaAtualizada.getStatus());
+
+            // Salva a vaga atualizada sem alterar o recrutador original
             Vaga vagaAtualizadaSalva = vagaService.salvarVaga(vagaExistente);
             return new ResponseEntity<>(vagaAtualizadaSalva, HttpStatus.OK);
         }
@@ -76,11 +93,33 @@ public class VagaController {
     // Endpoint para deletar uma vaga por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarVaga(@PathVariable Long id) {
-        Optional<Vaga> vaga = vagaService.buscarVagaPorId(id);
-        if (vaga.isPresent()) {
-            vagaService.deletarVaga(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Long userId = getLoggedUserId();  // Obtenção simulada do ID do usuário logado
+        String userRole = getLoggedUserRole();  // Obtenção simulada do papel do usuário logado
+
+        System.out.println("Tentativa de exclusão. ID da vaga: " + id + ", userId: " + userId + ", userRole: " + userRole);
+
+        Optional<Vaga> vagaOptional = vagaService.buscarVagaPorId(id);
+
+        if (vagaOptional.isPresent()) {
+            Vaga vagaExistente = vagaOptional.get();
+
+            if ("ADMIN".equalsIgnoreCase(userRole)) {
+                System.out.println("Usuário ADMIN autorizado a deletar.");
+                vagaService.deletarVaga(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            if (vagaExistente.getRecrutador().getId().equals(userId)) {
+                System.out.println("Recrutador original autorizado a deletar.");
+                vagaService.deletarVaga(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            System.out.println("Usuário não autorizado a deletar a vaga.");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+
+        System.out.println("Vaga não encontrada.");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

@@ -26,9 +26,10 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     })
     .then(data => {
         console.log('Login bem-sucedido:', data);
-        // Armazena o ID e o tipo do usuário logado
+        
+        // Armazena o ID e o tipo do usuário logado no localStorage ou sessionStorage
         sessionStorage.setItem('userId', data.id);
-        sessionStorage.setItem('userType', userType);
+        sessionStorage.setItem('userType', userType);  // Pode ser 'admin', 'recrutador', ou 'candidato'
 
         // Redireciona para a página apropriada de acordo com o tipo de usuário
         if (userType === 'admin') {
