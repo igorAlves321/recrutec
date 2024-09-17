@@ -37,7 +37,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         } else if (userType === 'recrutador') {
             window.location.href = "gerenciar-vagas.html";  // Página do Recrutador
         } else if (userType === 'candidato') {
-            window.location.href = "vagas.html";  // Página de Vagas para Candidato
+            window.location.href = "area.html";  // Página da Área do Candidato (alterado de vagas.html para area.html)
         }
     })
     .catch(error => {
@@ -45,3 +45,4 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         alert('Login falhou. Verifique suas credenciais.');
     });
 });
+
