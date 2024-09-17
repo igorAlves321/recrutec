@@ -49,25 +49,52 @@
                 <div class="modal-body">
                     <form id="editForm">
                         <input type="hidden" id="editId">
-                        <div class="mb-3">
+
+                        <!-- Campos para Nome (Candidatos e Recrutadores) -->
+                        <div class="mb-3" id="nomeField" style="display:none;">
+                            <label for="editNome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="editNome" required>
+                        </div>
+
+                        <!-- Campos para Email (Candidatos e Recrutadores) -->
+                        <div class="mb-3" id="emailField" style="display:none;">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail" required>
+                        </div>
+
+                        <!-- Campos para Empresa (Recrutadores) -->
+                        <div class="mb-3" id="empresaField" style="display:none;">
+                            <label for="editEmpresa" class="form-label">Empresa</label>
+                            <input type="text" class="form-control" id="editEmpresa">
+                        </div>
+
+                        <!-- Campos para Título (Vagas) -->
+                        <div class="mb-3" id="tituloField" style="display:none;">
                             <label for="editTitulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="editTitulo" required>
+                            <input type="text" class="form-control" id="editTitulo">
                         </div>
-                        <div class="mb-3">
+
+                        <!-- Campos para Descrição (Vagas) -->
+                        <div class="mb-3" id="descricaoField" style="display:none;">
                             <label for="editDescricao" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="editDescricao" required></textarea>
+                            <textarea class="form-control" id="editDescricao"></textarea>
                         </div>
-                        <div class="mb-3">
+
+                        <!-- Campos para Status (Vagas) -->
+                        <div class="mb-3" id="statusField" style="display:none;">
                             <label for="editStatus" class="form-label">Status</label>
-                            <select class="form-control" id="editStatus" required>
+                            <select class="form-control" id="editStatus">
                                 <option value="Aberta">Aberta</option>
                                 <option value="Fechada">Fechada</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+
+                        <!-- Campos para Data de Postagem (Vagas) -->
+                        <div class="mb-3" id="dataPostagemField" style="display:none;">
                             <label for="editDataPostagem" class="form-label">Data de Postagem</label>
                             <input type="date" class="form-control" id="editDataPostagem" disabled>
                         </div>
+
                         <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                     </form>
                 </div>

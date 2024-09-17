@@ -1,22 +1,46 @@
-// Função para exibir a saudação
-function exibirSaudacao() {
-    const nomeUsuario = localStorage.getItem('nomeUsuario'); // Obtém o nome do usuário do localStorage
-    if (nomeUsuario) {
-        document.getElementById('saudacao').innerText = `Olá, ${nomeUsuario}`;
-    } else {
-        window.location.href = 'login.html'; // Se o nome não estiver no localStorage, redireciona para login
-    }
-}
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-// Função para sair (logout)
-function sair() {
-    localStorage.removeItem('nomeUsuario'); // Remove o nome do usuário do localStorage
-    localStorage.removeItem('token'); // Remove o token de autenticação (se estiver usando JWT)
-    window.location.href = 'login.html'; // Redireciona para a página de login
-}
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
 
-// Configura o botão de sair
-document.getElementById('btnSair').addEventListener('click', sair);
+    // Seleção do tipo de usuário (Recrutador, Candidato ou Admin)
+    const userType = document.getElementById('userType').value;  // Pode ser 'recrutador', 'candidato' ou 'admin'
 
-// Chama a função de exibição da saudação quando a página carrega
-exibirSaudacao();
+    // Monta a URL correta para recrutador, candidato ou admin
+    const loginUrl = `/login/${userType}`;
+
+    fetch(loginUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, senha: senha }),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Login inválido');
+        }
+    })
+    .then(data => {
+        console.log('Login bem-sucedido:', data);
+        // Armazena o ID e o tipo do usuário logado
+        sessionStorage.setItem('userId', data.id);
+        sessionStorage.setItem('userType', userType);
+
+        // Redireciona para a página apropriada de acordo com o tipo de usuário
+        if (userType === 'admin') {
+            window.location.href = "admin.html";  // Página do Admin
+        } else if (userType === 'recrutador') {
+            window.location.href = "gerenciar-vagas.html";  // Página do Recrutador
+        } else if (userType === 'candidato') {
+            window.location.href = "vagas.html";  // Página de Vagas para Candidato
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao fazer login:', error);
+        alert('Login falhou. Verifique suas credenciais.');
+    });
+});

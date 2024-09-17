@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('editForm').addEventListener('submit', function (event) {
         event.preventDefault();
         const id = document.getElementById('editId').value;
+    console.log("ID passado para o PUT:", id); // <-- Verificação do ID
         const nome = document.getElementById('editNome') ? document.getElementById('editNome').value : null;
         const email = document.getElementById('editEmail') ? document.getElementById('editEmail').value : null;
         const empresa = document.getElementById('editEmpresa') ? document.getElementById('editEmpresa').value : null;
@@ -67,7 +68,7 @@ function carregarCandidatos() {
             data.forEach(candidato => {
                 html += `<tr><td>${candidato.nome}</td><td>${candidato.email}</td>
                          <td>
-                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${candidato.id}, '${candidato.nome}', '${candidato.email}', '', 'candidato')">Editar</button>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${candidato.id}, '${candidato.nome}', '${candidato.email}', '', '', '', '', 'candidato')">Editar</button>
                             <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${candidato.id}, 'candidato')">Excluir</button>
                          </td></tr>`;
             });
@@ -85,7 +86,7 @@ function carregarRecrutadores() {
             data.forEach(recrutador => {
                 html += `<tr><td>${recrutador.nome}</td><td>${recrutador.email}</td><td>${recrutador.empresa}</td>
                          <td>
-                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${recrutador.id}, '${recrutador.nome}', '${recrutador.email}', '${recrutador.empresa}', 'recrutador')">Editar</button>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${recrutador.id}, '${recrutador.nome}', '${recrutador.email}', '${recrutador.empresa}', '', '', '', 'recrutador')">Editar</button>
                             <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${recrutador.id}, 'recrutador')">Excluir</button>
                          </td></tr>`;
             });
@@ -103,7 +104,7 @@ function carregarVagas() {
             data.forEach(vaga => {
                 html += `<tr><td>${vaga.titulo}</td><td>${vaga.descricao}</td><td>${vaga.status}</td><td>${vaga.dataPostagem}</td>
                          <td>
-                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${vaga.id}, '${vaga.titulo}', '${vaga.descricao}', '${vaga.status}', '${vaga.dataPostagem}', 'vaga')">Editar</button>
+                            <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${vaga.id}, '', '', '${vaga.titulo}', '${vaga.descricao}', '${vaga.status}', '${vaga.dataPostagem}', 'vaga')">Editar</button>
                             <button class="btn btn-sm btn-danger" onclick="excluirEntidade(${vaga.id}, 'vaga')">Excluir</button>
                          </td></tr>`;
             });
@@ -113,17 +114,48 @@ function carregarVagas() {
 }
 
 // Função para abrir o modal de edição
-function abrirModalEditar(id, titulo = '', descricao = '', status = '', dataPostagem = '', tipo) {
+function abrirModalEditar(id, nome = '', email = '', titulo = '', descricao = '', status = '', dataPostagem = '', tipo) {
+    // Limpa campos antes de abrir o modal
     document.getElementById('editId').value = id;
-    document.getElementById('editTitulo').value = titulo;
-    document.getElementById('editDescricao').value = descricao;
-    document.getElementById('editStatus').value = status;
-    
-    // Exibe a data de postagem, mas não permite edição
-    document.getElementById('editDataPostagem').value = dataPostagem;
-    document.getElementById('editDataPostagem').setAttribute('disabled', 'disabled');
 
+    // Esconde todos os campos
+    document.getElementById('nomeField').style.display = 'none';
+    document.getElementById('emailField').style.display = 'none';
+    document.getElementById('empresaField').style.display = 'none';
+    document.getElementById('tituloField').style.display = 'none';
+    document.getElementById('descricaoField').style.display = 'none';
+    document.getElementById('statusField').style.display = 'none';
+    document.getElementById('dataPostagemField').style.display = 'none';
+
+    // Definir o atributo data-tipo no formulário
     document.getElementById('editForm').setAttribute('data-tipo', tipo);
+    console.log("Tipo definido:", tipo);  // Verifique se o tipo está correto
+
+    // Mostra os campos apropriados conforme o tipo de entidade
+    if (tipo === 'candidato') {
+        document.getElementById('nomeField').style.display = 'block';
+        document.getElementById('emailField').style.display = 'block';
+        document.getElementById('editNome').value = nome;
+        document.getElementById('editEmail').value = email;
+    } else if (tipo === 'recrutador') {
+        document.getElementById('nomeField').style.display = 'block';
+        document.getElementById('emailField').style.display = 'block';
+        document.getElementById('empresaField').style.display = 'block';
+        document.getElementById('editNome').value = nome;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editEmpresa').value = descricao;
+    } else if (tipo === 'vaga') {
+        document.getElementById('tituloField').style.display = 'block';
+        document.getElementById('descricaoField').style.display = 'block';
+        document.getElementById('statusField').style.display = 'block';
+        document.getElementById('dataPostagemField').style.display = 'block';
+        document.getElementById('editTitulo').value = titulo;
+        document.getElementById('editDescricao').value = descricao;
+        document.getElementById('editStatus').value = status;
+        document.getElementById('editDataPostagem').value = dataPostagem;
+    }
+
+    // Exibe o modal
     const modal = new bootstrap.Modal(document.getElementById('editModal'));
     modal.show();
 }
@@ -168,6 +200,8 @@ async function atualizarEntidade(id, data, tipo, recrutadorId = null) {
     if (tipo === 'vaga' && recrutadorId) {
         endpoint += `?recrutadorId=${recrutadorId}`;
     }
+    console.log("URL do PUT:", endpoint);  // Verifique a URL
+    console.log("Dados enviados no PUT:", JSON.stringify(data));  // Verifique os dados
 
     const response = await fetch(endpoint, {
         method: 'PUT',

@@ -4,8 +4,11 @@ document.getElementById('addVagaForm').addEventListener('submit', function(event
     const titulo = document.getElementById('titulo').value;
     const descricao = document.getElementById('descricao').value;
 
+    // Função fictícia para pegar o ID do recrutador logado, no futuro será substituído por JWT
+    const recrutadorId = obterRecrutadorId();  // Você pode trocar isso no futuro quando tiver JWT configurado
+
     // Chamada para o backend (API) para cadastrar a vaga
-    fetch('/vagas?recrutadorId=4', {  // Substitua '4' pelo ID do recrutador logado
+    fetch(`/vagas?recrutadorId=${recrutadorId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -23,6 +26,7 @@ document.getElementById('addVagaForm').addEventListener('submit', function(event
     })
     .catch((error) => {
         console.error('Erro ao cadastrar vaga:', error);
+        mostrarErro('Erro ao cadastrar vaga. Tente novamente.');
     });
 });
 
@@ -48,6 +52,7 @@ function listarVagas() {
     })
     .catch((error) => {
         console.error('Erro ao listar vagas:', error);
+        mostrarErro('Erro ao carregar as vagas. Tente novamente.');
     });
 }
 
@@ -64,6 +69,7 @@ function editarVaga(id) {
     })
     .catch((error) => {
         console.error('Erro ao buscar vaga para edição:', error);
+        mostrarErro('Erro ao carregar os dados da vaga.');
     });
 }
 
@@ -91,6 +97,7 @@ function salvarAlteracoesVaga() {
     })
     .catch((error) => {
         console.error('Erro ao salvar alterações da vaga:', error);
+        mostrarErro('Erro ao salvar as alterações da vaga.');
     });
 }
 
@@ -103,7 +110,25 @@ function excluirVaga(id) {
     })
     .catch((error) => {
         console.error('Erro ao excluir vaga:', error);
+        mostrarErro('Erro ao excluir a vaga.');
     });
+}
+
+// Função para exibir alertas de erro
+function mostrarErro(mensagem) {
+    const alerta = document.createElement('div');
+    alerta.classList.add('alert', 'alert-danger');
+    alerta.textContent = mensagem;
+    document.body.prepend(alerta);
+
+    // Remove o alerta após 5 segundos
+    setTimeout(() => alerta.remove(), 5000);
+}
+
+// Função fictícia para obter o ID do recrutador logado
+function obterRecrutadorId() {
+    // Aqui você pode obter o ID do recrutador de um contexto de login ou sessão
+    return 4;  // Placeholder até a configuração de autenticação com JWT
 }
 
 // Inicializa a lista de vagas ao carregar a página

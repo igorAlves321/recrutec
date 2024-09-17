@@ -1,12 +1,6 @@
 package recrutec.recrutec.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,19 +24,29 @@ public class Vaga {
     @ManyToOne
     private Recrutador recrutador;
 
-    @ManyToMany(mappedBy = "vagasInscritas")
-    private Set<Candidato> candidatos;
+    @ManyToMany
+    @JoinTable(
+        name = "inscricoes",
+        joinColumns = @JoinColumn(name = "vaga_id"),
+        inverseJoinColumns = @JoinColumn(name = "candidato_id")
+    )
+    private Set<Candidato> candidatosInscritos;
 
     private LocalDate dataPostagem;
 
     // Define a data de postagem como a data atual antes de persistir a entidade
     @PrePersist
     public void prePersist() {
-        this.dataPostagem = LocalDate.now();
+        if (this.dataPostagem == null) {
+            this.dataPostagem = LocalDate.now();
+        }
     }
 
     // Método para calcular os dias desde a postagem
     public long getDiasDesdePostagem() {
-        return ChronoUnit.DAYS.between(this.dataPostagem, LocalDate.now());
+        if (this.dataPostagem != null) {
+            return ChronoUnit.DAYS.between(this.dataPostagem, LocalDate.now());
+        }
+        return 0; // Retorna 0 se a data não estiver definida
     }
 }
