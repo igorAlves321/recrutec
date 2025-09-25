@@ -22,15 +22,15 @@ public class Vaga {
     private String status;
 
     @ManyToOne
-    private Recrutador recrutador;
+    private User recrutador; // Deve ser um User com role RECRUTADOR
 
     @ManyToMany
     @JoinTable(
         name = "inscricoes",
         joinColumns = @JoinColumn(name = "vaga_id"),
-        inverseJoinColumns = @JoinColumn(name = "candidato_id")
+        inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<Candidato> candidatosInscritos;
+    private Set<User> candidatosInscritos; // Users com role CANDIDATO
 
     private LocalDate dataPostagem;
 
